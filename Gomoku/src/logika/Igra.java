@@ -28,7 +28,7 @@ public class Igra {
 	public char zmagovalec;
 	public int poteza ;
 
-	char[] igralci = {'X', '0'};
+	public char[] igralci = {'X', 'O'};
 	
 	public static final int ZMAGA_ST = 5;
 	
@@ -95,7 +95,7 @@ public class Igra {
 	
 	public char naPotezi() {
 		
-		return igralci[this.poteza%2];
+		return igralci[this.poteza % 2];
 	}
 	
 	
@@ -104,21 +104,12 @@ public class Igra {
 	}
 	
 	public  boolean odigrajPotezo(Koordinati k) {
+		System.out.println(board[1][1]);
 		if ( this.moznePoteze.contains(k)) {
 			
 			this.moznePoteze.remove(k);
 			 
 			this.board[k.getX()][k.getY()] = naPotezi() ;
-
-			/*
-			if (this.poteza % 2 == 0) {
-				 this.board[k.getX()][k.getY()] = 'X' ;
-			}
-			else { 
-				this.board[k.getX()][k.getY()] = 'O';
-			}
-			*/
-			
 			
 			this.poteza++;
 			
@@ -127,14 +118,12 @@ public class Igra {
 		return false;
 	}
 	
-	public  char preveriZmago(Koordinati k) {
+	public  char preveriZmago() {
 		
-		// 		java.util.List<Character> polja = Arrays.asList(ZmagaVrstica(k), ZmagaStolpec(k), ZmagaDiagonala(k)); 
 		java.util.List<Character> polja = Arrays.asList(ZmagaVrstica(), ZmagaStolpec(), ZmagaDiagonala()); 
 		for (Character i : polja) {
-			if (!i.equals( this.PRAZNO)) {
+			if (!i.equals(this.PRAZNO)) {
 				igra.zmagovalec = i;
-				System.out.println(igra.zmagovalec);
 				return igra.zmagovalec;
 			}
 		}
@@ -309,59 +298,12 @@ public class Igra {
 
 		return  zmagovalec;
 	}
-
 	
-	public char ZmagaVrstica(Koordinati k) {
-		int i = 0;
-		for (char c :  this.board[k.getX()]) {
-			if (c == 'X') {
-				i++;
-				if (i >= 5) {
-					return 'X';
-				}
-			}
-			else {
-				i = 0;
-			}
-		}
-		return  this.PRAZNO;
+	public boolean odigrajPotezo(){
+		
+		
+		return true;
 	}
-	
-	public char ZmagaStolpec(Koordinati k) {
-		int j = 0;
-		for (int i = 0; i<  this.dim; i++) {
-			if ( this.board[i][k.getY()] == 'X') {
-				j++;
-				if (j >= 5) {
-					return 'X';
-				}
-			}
-			else {
-				j = 0;
-			}
-		}
-		return  this.PRAZNO;
-	}
-	public char ZmagaDiagonala(Koordinati k) {
-		return this.PRAZNO;
-		/*int j = 0;
-		int zacetek = Math.min(k.getX(),k.getY());
-		int konec = dim - Math.max(k.getX(),k.getY()) + 1;
-		for (int i = zacetek; i< konec; i++) {
-			if (board[k.getX() - i][k.getY() - i] == 'X') {
-				j++;
-				if (j >= 4) {
-					return 'X';
-				}
-			}
-			else {
-				j = 0;
-			}
-		}
-		return PRAZNO;   */
-	}
-	
-	
 	
 
 }

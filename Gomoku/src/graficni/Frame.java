@@ -1,6 +1,7 @@
 package graficni;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -17,7 +18,6 @@ import logika.Igra;
 
 @SuppressWarnings("serial")
 public class Frame extends JFrame implements ActionListener {
-	
 	
 	protected Panel panel;
 	private JMenuItem menuVelikost;
@@ -47,6 +47,7 @@ public class Frame extends JFrame implements ActionListener {
 		JMenuBar menubar = new JMenuBar();
 		setJMenuBar(menubar);
 		
+		
 		JMenu menuIgra = dodajMenu(menubar, "Lastnosti igre");
 		JMenu menuIgralec = dodajMenu(menubar, "Lastnosti igralca");
 		JMenu menuNastavitve = dodajMenu(menubar, "Lastnosti grafičnega vmesnika");
@@ -64,7 +65,10 @@ public class Frame extends JFrame implements ActionListener {
 		aktivnaBarvaLabel.setBackground(aktivnaBarva);
 		setBarva(aktivnaBarva);
 		
-		
+		setResizable(true);
+		//menubar.setPreferredSize(new Dimension(300,30));
+		this.pack();
+
 }
 
 	public JMenu dodajMenu(JMenuBar menubar, String naslov) {
@@ -96,9 +100,15 @@ public class Frame extends JFrame implements ActionListener {
 		Object source = e.getSource();
 		if (source == menuVelikost) {
 			velikost = Integer.parseInt(JOptionPane.showInputDialog(this, "Velikost okna: "));
-			Panel.dimenzije();
-			panel.setSize(velikost,velikost);
-			setSize(velikost, velikost);
+		//	panel.dimenzije();
+		//	panel.setSize(velikost,velikost);
+			panel.dimenzije(velikost);
+			panel.setPreferredSize(new Dimension(velikost, velikost));
+
+			
+		//	setSize(velikost, velikost);
+			
+			this.pack();
 		}
 		if (source == menuIme) {
 			String ime = JOptionPane.showInputDialog(this, "Ime igralca: ");
