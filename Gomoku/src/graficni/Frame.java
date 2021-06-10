@@ -19,10 +19,12 @@ import logika.Igra;
 @SuppressWarnings("serial")
 public class Frame extends JFrame implements ActionListener {
 	
-	protected Panel panel;
+	public static Panel panel;
 	private JMenuItem menuVelikost;
 	private JMenuItem menuIme;
-	private JMenuItem menuClovek;
+	private JMenuItem menuClovekClovek;
+	private JMenuItem menuClovekRacunalnik;
+	private JMenuItem menuRacunalnikRacunalnik;
 	private JMenuItem menuBarva;
 	private JMenuItem menuCas;
 	private int height = 500;
@@ -33,6 +35,10 @@ public class Frame extends JFrame implements ActionListener {
 	public static int velikost;
 	
 	public Igra igra;
+	
+	public static boolean clovekClovek; // določa kdaj je igra človek vs človek
+	public static boolean racunalnikRacunalnik; // določa kdaj je igra rač vs rač
+	
 	
 	public Frame(Igra igra) {
 		
@@ -54,7 +60,9 @@ public class Frame extends JFrame implements ActionListener {
 		
 		menuVelikost = dodajMenuItem(menuIgra,"Velikost");
 		menuIme = dodajMenuItem(menuIgralec,"Ime");
-		menuClovek = dodajMenuItem(menuIgralec,"Človek ali računalnik");
+		menuClovekClovek = dodajMenuItem(menuIgralec,"Človek proti človeku");
+		menuClovekRacunalnik = dodajMenuItem(menuIgralec,"Človek proti računalnik");
+		menuRacunalnikRacunalnik = dodajMenuItem(menuIgralec,"Računalnik proti računalnik");
 		menuBarva = dodajMenuItem(menuNastavitve,"Barva kovanca");
 		menuCas = dodajMenuItem(menuNastavitve,"Čas poteze");
 		
@@ -114,9 +122,27 @@ public class Frame extends JFrame implements ActionListener {
 			String ime = JOptionPane.showInputDialog(this, "Ime igralca: ");
 		
 		}
-		if (source == menuClovek) {
+			//Clovek proti Cloveku
+		if (source == menuClovekClovek) {
+			
+			clovekClovek = true;
 			
 		}
+			//Clovek proti Racunalniku
+		if (source == menuClovekRacunalnik) {
+			
+			clovekClovek = false;
+			
+		}
+		
+		if (source == menuRacunalnikRacunalnik) {
+			
+			racunalnikRacunalnik = true;
+			
+		}
+		
+		
+		
 		
 		if (source == menuBarva) {
 			Color novaBarva = JColorChooser.showDialog(this,

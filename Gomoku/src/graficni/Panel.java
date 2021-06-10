@@ -33,6 +33,12 @@ public class Panel extends JPanel implements MouseListener {
 	  public  int velikost = 500;
 	  public  Set<Koordinati> moznePoteze;
 	  
+	  public boolean clovekClovek = false;
+	  public boolean racunalnikRacunalnik = false;
+	  
+	  
+	  
+	  
 	public Panel(int sirina, int visina, int rows, int cols, Igra igra) {
 		super(); 
 		
@@ -89,6 +95,33 @@ public class Panel extends JPanel implements MouseListener {
 		      g.drawLine(i * rowWid, 0, i * rowWid, velikost);
 		    }
 		    
+		    if (Frame.racunalnikRacunalnik == true) {
+				igra.racunalnikIgra(igra, Frame.panel);
+					for (int i = 0; i < igra.dim; i++) {
+						for (int j = 0; j < igra.dim; j++) {
+							
+							if(igra.board[i][j] != igra.PRAZNO) {
+								
+								Koordinati k = new Koordinati(i, j);
+								
+								if(igra.board[i][j] == igra.igralci[0]) { // clovek
+									g.setColor(Frame.barva);
+								}
+								else {
+									//racunalnik
+								    g.setColor(Color.blue);
+								}
+								
+							    g.fillOval(CentralizirajX(pretvoriRacunalnik(k.getX(), 15, velikost),15,velikost), CentralizirajY(pretvoriRacunalnik(k.getY(), 15, velikost),15,velikost), velikost / (3*cols), velikost / (3*cols));
+							 
+							}
+						}
+					}
+				
+				
+				
+		    }
+		    
 		    
 			for (int i = 0; i < igra.dim; i++) {
 				for (int j = 0; j < igra.dim; j++) {
@@ -102,14 +135,17 @@ public class Panel extends JPanel implements MouseListener {
 							g.setColor(Frame.barva);
 						}
 						else {
-							
+							//racunalnik
 						    g.setColor(Color.blue);
 						}
-					    g.fillOval(CentralizirajX(pretvoriRacunalnik(k.getX(), 15, velikost),15,velikost), CentralizirajY(pretvoriRacunalnik(k.getY(), 15, velikost),15,velikost), 15, 15);
+					    g.fillOval(CentralizirajX(pretvoriRacunalnik(k.getX(), 15, velikost),15,velikost), CentralizirajY(pretvoriRacunalnik(k.getY(), 15, velikost),15,velikost), velikost / (3*cols), velikost / (3*cols));
 
 					}
 				}
 			}
+			
+			
+			
 		    // clovek
 
 		    // racunalnik
@@ -145,9 +181,9 @@ public class Panel extends JPanel implements MouseListener {
 		
 		for (int i = 0; i < h; i = i + (h / rows)){
 			if (x < i) {
-				x = (int)Math.round((i + (i - (h / rows) )) / 2); //x premaknemo v sredino
+				y = (int)Math.round((i + (i - (h / rows) )) / 2); //x premaknemo v sredino
 
-				return x-7;
+				return y-7;
 			}
 		}
 		return 0;
@@ -165,7 +201,7 @@ public class Panel extends JPanel implements MouseListener {
 		return 0;
 	}
 	
-	//pretvori koordinate v koordinate od 0 do dim
+	//pretvori koordinate od 0 do velikost v koordinate od 0 do dim
 	
 	public int pretvoriKoordinatoX(int x, int rows, int h) {
 		int j = -2;
@@ -210,30 +246,47 @@ public class Panel extends JPanel implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		x = e.getX();
-		y = e.getY();
+		// ce ni igra racunalnik proti racunalnik
+		if (Frame.racunalnikRacunalnik == false) {
 		
-		
-		clovekPoteza = (new Koordinati((pretvoriKoordinatoX(x, rows, width)), pretvoriKoordinatoY(y, cols, height)));
-		
-	    if (igra.poteza % 2 == 0) {
-		    if (igra.moznePoteze.contains(clovekPoteza)) {
-		    	if (igra.preveriZmago() == Igra.PRAZNO) {
-		    		igra.odigrajPotezo(clovekPoteza);
-		    	}
+			x = e.getX();
+			y = e.getY();
+			
+			
+			clovekPoteza = (new Koordinati((pretvoriKoordinatoX(x, rows, width)), pretvoriKoordinatoY(y, cols, height)));
+			
+		    if (igra.poteza % 2 == 0) {
+			    if (igra.moznePoteze.contains(clovekPoteza)) {
+			    	if (igra.preveriZmago() == Igra.PRAZNO) {
+			    		igra.odigrajPotezo(clovekPoteza);
+			    	}
+			    }
 		    }
-	    }
-	    if (igra.poteza % 2 != 0) {
-	    	Koordinati k = igra.racunalnikPoteza();
-	    	if (igra.preveriZmago() == Igra.PRAZNO) {
-			    igra.odigrajPotezo(k);
-	    	}
-	    }
-	    
-
-		
-		repaint();
-
+		    
+		    if (Frame.clovekClovek == false) {
+			    if (igra.poteza % 2 != 0) {
+			    	Koordinati k = igra.racunalnikPoteza(igra);
+			    	if (igra.preveriZmago() == Igra.PRAZNO) {
+					    igra.odigrajPotezo(k);
+			    	}
+			    }
+		    
+		    }
+		    
+		    else {
+		    	if (igra.poteza % 2 != 0) {
+				    if (igra.moznePoteze.contains(clovekPoteza)) {
+				    	if (igra.preveriZmago() == Igra.PRAZNO) {
+				    		igra.odigrajPotezo(clovekPoteza);
+				    	}
+				    }
+			    }
+		    	
+		    	
+		    }
+		    
+			repaint();
+			}
 	}
 
 	@Override

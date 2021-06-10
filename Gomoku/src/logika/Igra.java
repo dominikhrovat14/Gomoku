@@ -27,6 +27,11 @@ public class Igra {
 	public  Igra igra;
 	public char zmagovalec;
 	public int poteza ;
+	protected Panel panel;
+	
+	
+	
+	 public boolean racunalnikRacunalnik = false;
 
 	public char[] igralci = {'X', 'O'};
 	
@@ -101,10 +106,10 @@ public class Igra {
 	
 	public  void zacni () {
 		igra = new Igra ();
+		panel = Frame.panel;
 	}
 	
 	public  boolean odigrajPotezo(Koordinati k) {
-		System.out.println(board[1][1]);
 		if ( this.moznePoteze.contains(k)) {
 			
 			this.moznePoteze.remove(k);
@@ -124,6 +129,13 @@ public class Igra {
 		for (Character i : polja) {
 			if (!i.equals(this.PRAZNO)) {
 				igra.zmagovalec = i;
+				if (i == 'X') System.out.println("Zmagovalec je PRVI igralec");
+				else if (i == 'O') System.out.println("Zmagovalec je DRUGI igralec");
+				else System.out.println("NEODLOČENO");
+
+				
+				
+				
 				return igra.zmagovalec;
 			}
 		}
@@ -140,7 +152,8 @@ public class Igra {
 		
 	}
 	
-	public  Koordinati racunalnikPoteza() {
+	public  Koordinati racunalnikPoteza(Igra igra) {
+		
 		Set<Koordinati> moznePoteze = igra.moznePoteze;
 		int size = moznePoteze.size();
 		int j = new Random().nextInt(size);
@@ -150,6 +163,7 @@ public class Igra {
 		{
 			if (i == j) {
 				poteza = k;
+				igra.odigrajPotezo(poteza);
 				return poteza;
 
 				
@@ -158,9 +172,21 @@ public class Igra {
 			i++;
 		}
 		igra.odigrajPotezo(poteza);
+		
 		return poteza;
 
 	}
+	
+	// igra racunalnik proti racunalniku
+	public void racunalnikIgra(Igra igra, Panel panel) {
+		if (igra.preveriZmago() == Igra.PRAZNO) {
+		racunalnikPoteza(igra);
+		panel.repaint();
+		}
+		
+	}
+	
+	
 	// to je zmaga stolpec?
 	
 	public char ZmagaVrstica() {
