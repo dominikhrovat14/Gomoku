@@ -37,6 +37,12 @@ public class Panel extends JPanel implements MouseListener {
 	  public boolean racunalnikRacunalnik = false;
 	  
 	  
+	  public static Koordinati zacetek;
+	  public static Koordinati zacetek_stolpec,zacetek_diagonala;
+	  public static Koordinati konec;
+	  public static Koordinati konec_stolpec, konec_diagonala;
+	  
+	  
 	  
 	  
 	public Panel(int sirina, int visina, int rows, int cols, Igra igra) {
@@ -145,6 +151,28 @@ public class Panel extends JPanel implements MouseListener {
 			}
 			
 			
+			if (igra.ZmagaVrstica() != Igra.PRAZNO) {
+				System.out.println(Igra.zacetek.getX());
+				g.setColor(Color.GREEN);
+		    	g.drawLine(pretvoriRacunalnik(Igra.zacetek.getX(),  15, velikost), pretvoriRacunalnik(Igra.zacetek.getY(), 15, velikost), pretvoriRacunalnik(Igra.konec.getX(), 15, velikost), pretvoriRacunalnik(Igra.konec.getY(), 15, velikost));
+		    	
+		    }
+			
+			if (igra.ZmagaStolpec() != Igra.PRAZNO) {
+				g.setColor(Color.GREEN);
+		    	g.drawLine(pretvoriRacunalnik(Igra.zacetek_stolpec.getX(),  15, velikost), pretvoriRacunalnik(Igra.zacetek_stolpec.getY(), 15, velikost), pretvoriRacunalnik(Igra.konec_stolpec.getX(), 15, velikost), pretvoriRacunalnik(Igra.konec_stolpec.getY(), 15, velikost));
+		    	
+		    }
+			
+			if (igra.ZmagaDiagonala() != Igra.PRAZNO) {
+				System.out.println(Igra.zacetek_diagonala.getX() + " " + Igra.konec_diagonala.getX());
+				g.setColor(Color.GREEN);
+		    	g.drawLine(pretvoriRacunalnik(Igra.zacetek_diagonala.getX(),  15, velikost), pretvoriRacunalnik(Igra.zacetek_diagonala.getY(), 15, velikost), pretvoriRacunalnik(Igra.konec_diagonala.getX(), 15, velikost), pretvoriRacunalnik(Igra.konec_diagonala.getY(), 15, velikost));
+			}
+			
+			
+			
+			
 			
 		    // clovek
 
@@ -248,7 +276,6 @@ public class Panel extends JPanel implements MouseListener {
 	public void mouseClicked(MouseEvent e) {
 		// ce ni igra racunalnik proti racunalnik
 		if (Frame.racunalnikRacunalnik == false) {
-		
 			x = e.getX();
 			y = e.getY();
 			
@@ -284,6 +311,8 @@ public class Panel extends JPanel implements MouseListener {
 		    	
 		    	
 		    }
+		    
+		    
 		    
 			repaint();
 			}

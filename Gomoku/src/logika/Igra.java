@@ -29,6 +29,11 @@ public class Igra {
 	public int poteza ;
 	protected Panel panel;
 	
+	public static Koordinati zacetek;
+	public static Koordinati konec;
+	public static Koordinati konec_stolpec, konec_diagonala;
+	public static Koordinati zacetek_stolpec, zacetek_diagonala;
+	
 	
 	
 	 public boolean racunalnikRacunalnik = false;
@@ -133,9 +138,6 @@ public class Igra {
 				else if (i == 'O') System.out.println("Zmagovalec je DRUGI igralec");
 				else System.out.println("NEODLOČENO");
 
-				
-				
-				
 				return igra.zmagovalec;
 			}
 		}
@@ -187,17 +189,16 @@ public class Igra {
 	}
 	
 	
-	// to je zmaga stolpec?
 	
-	public char ZmagaVrstica() {
+	public char ZmagaStolpec() {
 	
 		char zmagovalec = this.PRAZNO;
-		
 		
 		for (int i = 0; i < dim; i++) {
 		
 			int zaporednih = 0;
 			char trenutni = this.PRAZNO;
+			
 			
 			for (int j = 0; j < dim; j++) {
 				
@@ -213,20 +214,24 @@ public class Igra {
 				else {
 					
 					trenutni = this.board[i][j];
+					zacetek_stolpec = new Koordinati(i, j);
 					zaporednih = 1;
+					
 				}
 				
 				
 				if(zaporednih == ZMAGA_ST) {
-					
+					System.out.println("NOTRI");
+					konec_stolpec = new Koordinati(i, j);
 					zmagovalec = trenutni;
+					System.out.println(zacetek + "    " + konec);
 					return zmagovalec;
 				}
 			}
 		}		
 		return  zmagovalec;
 	}
-	public char ZmagaStolpec() {
+	public char ZmagaVrstica() {
 	
 		
 		char zmagovalec = this.PRAZNO;
@@ -251,12 +256,14 @@ public class Igra {
 				else {
 					
 					trenutni = this.board[i][j];
+					zacetek = new Koordinati(i, j);
 					zaporednih = 1;
 				}
 				
 				
 				if(zaporednih == ZMAGA_ST) {
 					
+					konec = new Koordinati(i, j);
 					zmagovalec = trenutni;
 					return zmagovalec;
 				}
@@ -277,6 +284,7 @@ public class Igra {
 				
 			
 				if(this.board[i][j] != this.PRAZNO) {
+					zacetek_diagonala = new Koordinati(i, j);
 
 					if(j >= start ) {
 						
@@ -294,6 +302,9 @@ public class Igra {
 						if(ujemanje) {
 							
 							zmagovalec = trenutni;
+							
+							konec_diagonala = new Koordinati(i + 4, j - 4);
+							System.out.println(zacetek_diagonala + "zacetek   " + konec_diagonala + " KONEC");
 							return zmagovalec;
 						}
 						
@@ -314,6 +325,8 @@ public class Igra {
 						if(ujemanje) {
 							
 							zmagovalec = trenutni;
+							konec_diagonala = new Koordinati(i +4 , j + 4);
+							System.out.println(zacetek_diagonala + "zacetek   " + konec_diagonala + " KONEC" + "TUKAAAAJ");
 							return zmagovalec;
 						}
 					}
