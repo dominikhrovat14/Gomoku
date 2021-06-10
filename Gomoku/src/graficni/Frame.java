@@ -21,12 +21,10 @@ public class Frame extends JFrame implements ActionListener {
 	
 	public static Panel panel;
 	private JMenuItem menuVelikost;
-	private JMenuItem menuIme;
 	private JMenuItem menuClovekClovek;
 	private JMenuItem menuClovekRacunalnik;
 	private JMenuItem menuRacunalnikRacunalnik;
 	private JMenuItem menuBarva;
-	private JMenuItem menuCas;
 	private int height = 500;
 	private int width = 500;
 	
@@ -46,7 +44,7 @@ public class Frame extends JFrame implements ActionListener {
 		setTitle("Gomoku1");
 		setBackground(Color.WHITE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		panel = new Panel(height, width, 15, 15, igra); //panel = new Panel(800, 800, panel.cols, panel.rows)
+		panel = new Panel(height, width, 15, 15, igra);
 		add(panel);
 		setSize(width, height);
 		
@@ -59,12 +57,11 @@ public class Frame extends JFrame implements ActionListener {
 		JMenu menuNastavitve = dodajMenu(menubar, "Lastnosti grafičnega vmesnika");
 		
 		menuVelikost = dodajMenuItem(menuIgra,"Velikost");
-		menuIme = dodajMenuItem(menuIgralec,"Ime");
-		menuClovekClovek = dodajMenuItem(menuIgralec,"Človek proti človeku");
-		menuClovekRacunalnik = dodajMenuItem(menuIgralec,"Človek proti računalnik");
+		menuClovekClovek = dodajMenuItem(menuIgralec,"človek proti človeku");
+		menuClovekRacunalnik = dodajMenuItem(menuIgralec,"človek proti računalnik");
 		menuRacunalnikRacunalnik = dodajMenuItem(menuIgralec,"Računalnik proti računalnik");
 		menuBarva = dodajMenuItem(menuNastavitve,"Barva kovanca");
-		menuCas = dodajMenuItem(menuNastavitve,"Čas poteze");
+
 		
 		
 		Color aktivnaBarva = Color.RED;
@@ -74,7 +71,6 @@ public class Frame extends JFrame implements ActionListener {
 		setBarva(aktivnaBarva);
 		
 		setResizable(true);
-		//menubar.setPreferredSize(new Dimension(300,30));
 		this.pack();
 
 }
@@ -108,8 +104,6 @@ public class Frame extends JFrame implements ActionListener {
 		Object source = e.getSource();
 		if (source == menuVelikost) {
 			velikost = Integer.parseInt(JOptionPane.showInputDialog(this, "Velikost okna: "));
-		//	panel.dimenzije();
-		//	panel.setSize(velikost,velikost);
 			panel.dimenzije(velikost);
 			panel.setPreferredSize(new Dimension(velikost, velikost));
 
@@ -118,10 +112,7 @@ public class Frame extends JFrame implements ActionListener {
 			
 			this.pack();
 		}
-		if (source == menuIme) {
-			String ime = JOptionPane.showInputDialog(this, "Ime igralca: ");
-		
-		}
+
 			//Clovek proti Cloveku
 		if (source == menuClovekClovek) {
 			
@@ -142,7 +133,7 @@ public class Frame extends JFrame implements ActionListener {
 		}
 		
 		
-		
+		//nastavi barvo zetona
 		
 		if (source == menuBarva) {
 			Color novaBarva = JColorChooser.showDialog(this,

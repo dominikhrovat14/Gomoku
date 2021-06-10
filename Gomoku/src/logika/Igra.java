@@ -2,44 +2,48 @@ package logika;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import javax.swing.SwingWorker;
 
 import graficni.Frame;
 import graficni.Panel;
+import inteligenca.Alphabeta;
+import inteligenca.Inteligenca;
+import inteligenca.Minimax;
 import splosno.Koordinati;
 
 public class Igra {
 	
-	/*
-	public static char[][] board;
-	public static int dim;
-	public static Set<Koordinati> moznePoteze;
-	public final static char PRAZNO = '.';
-	public static Igra igra;
-	public static char zmagovalec;
-	*/
+
 	
 	public  char[][] board;
 	public  int dim;
-	public Set<Koordinati> moznePoteze;
+	public List<Koordinati> moznePoteze;
 	public static final  char PRAZNO = '.';
 	public  Igra igra;
 	public char zmagovalec;
 	public int poteza ;
 	protected Panel panel;
 	
+	
+	//potrebujemo da nariše zmagovalno črto v panelu
 	public static Koordinati zacetek;
 	public static Koordinati konec;
 	public static Koordinati konec_stolpec, konec_diagonala;
 	public static Koordinati zacetek_stolpec, zacetek_diagonala;
 	
 	
-	
+	//določeno za igro racunalnik prot racunalnik
 	 public boolean racunalnikRacunalnik = false;
 
 	public char[] igralci = {'X', 'O'};
 	
+	//število mest potrebnih za zmago
 	public static final int ZMAGA_ST = 5;
 	
 	public Igra(int dim) {
@@ -48,7 +52,7 @@ public class Igra {
 		this.dim = dim;
 		zmagovalec = PRAZNO;
 		board = new char[dim][dim];
-		moznePoteze = new HashSet<Koordinati>();
+		moznePoteze = new LinkedList<Koordinati>();
 		for (int i = 0; i < dim; i++) {
 			for (int j = 0; j < dim; j++) {
 				board[i][j] = PRAZNO;
@@ -58,6 +62,7 @@ public class Igra {
 		}
 	}
 	
+	//potrebujemo za minimax
 	public Igra(Igra igra) {
 		
 		this.poteza = igra.poteza;
@@ -72,27 +77,18 @@ public class Igra {
 			}
 		}
 
-		this.moznePoteze = new HashSet<Koordinati>();
-		this.moznePoteze.addAll(igra.moznePoteze);
-
-	}
-
-	public String toString() {
-		
-		StringBuilder sb = new StringBuilder();
-		
+		moznePoteze = new LinkedList<Koordinati>();
 		for (int i = 0; i < dim; i++) {
 			for (int j = 0; j < dim; j++) {
-				
-				sb.append(this.board[i][j]);
+				board[i][j] = PRAZNO;
+				Koordinati k = new Koordinati(i,j);
+				moznePoteze.add(k);
 			}
-			sb.append("\n");
 		}
-		
-		return sb.toString();
 
 	}
-	
+
+
 	public void nastaviIgralce(char[] igralci) {
 		
 		this.igralci = igralci;
@@ -108,15 +104,16 @@ public class Igra {
 		return igralci[this.poteza % 2];
 	}
 	
-	
+	//začne igro. Poženemo v Glavna
 	public  void zacni () {
 		igra = new Igra ();
 		panel = Frame.panel;
 	}
 	
+	//odigra potezo na board in zbriše potezo iz moznePoteze
 	public  boolean odigrajPotezo(Koordinati k) {
 		if ( this.moznePoteze.contains(k)) {
-			
+
 			this.moznePoteze.remove(k);
 			 
 			this.board[k.getX()][k.getY()] = naPotezi() ;
@@ -132,11 +129,11 @@ public class Igra {
 		
 		java.util.List<Character> polja = Arrays.asList(ZmagaVrstica(), ZmagaStolpec(), ZmagaDiagonala()); 
 		for (Character i : polja) {
-			if (!i.equals(this.PRAZNO)) {
+			if (!i.equals(Igra.PRAZNO)) {
 				igra.zmagovalec = i;
 				if (i == 'X') System.out.println("Zmagovalec je PRVI igralec");
 				else if (i == 'O') System.out.println("Zmagovalec je DRUGI igralec");
-				else System.out.println("NEODLOČENO");
+				else System.out.println("NEODLOÄŒENO");
 
 				return igra.zmagovalec;
 			}
@@ -149,14 +146,44 @@ public class Igra {
 		}
 		else {
 
-			return  this.PRAZNO;			
+			return  Igra.PRAZNO;			
 		}
 		
 	}
 	
+	//za večje globine dela narobe
+	
+	public static Inteligenca racunalnikovaInteligenca = new Alphabeta(1);
+	
+	/*public static void igrajRacunalnikovoPotezo() {
+		Igra zacetkaIgra = igra;
+		SwingWorker<Koordinati, Void> worker = new SwingWorker<Koordinati, Void> () {
+			@Override
+			protected Koordinati doInBackground() {
+				Koordinati poteza = racunalnikovaInteligenca.izberiPotezo(igra);
+				try {TimeUnit.SECONDS.sleep(1);} catch (Exception e) {};
+				return poteza;
+			}
+			@Override
+			protected void done () {
+				Koordinati poteza = null;
+				try {poteza = get();} catch (Exception e) {};
+				if (igra == zacetkaIgra) {
+					igra.odigraj(poteza);
+					igramo ();
+				}
+			}
+		};
+		worker.execute();
+	}*/
+	
 	public  Koordinati racunalnikPoteza(Igra igra) {
+		Koordinati poteza = racunalnikovaInteligenca.izberiPotezo(igra);
 		
-		Set<Koordinati> moznePoteze = igra.moznePoteze;
+		
+		//random poteza
+		/*
+		  Set<Koordinati> moznePoteze = igra.moznePoteze;
 		int size = moznePoteze.size();
 		int j = new Random().nextInt(size);
 		int i = 0;
@@ -172,7 +199,7 @@ public class Igra {
 			}
 				
 			i++;
-		}
+		}*/
 		igra.odigrajPotezo(poteza);
 		
 		return poteza;
@@ -192,20 +219,20 @@ public class Igra {
 	
 	public char ZmagaStolpec() {
 	
-		char zmagovalec = this.PRAZNO;
+		char zmagovalec = Igra.PRAZNO;
 		
 		for (int i = 0; i < dim; i++) {
 		
 			int zaporednih = 0;
-			char trenutni = this.PRAZNO;
+			char trenutni = Igra.PRAZNO;
 			
 			
 			for (int j = 0; j < dim; j++) {
 				
-				if(this.board[i][j] == this.PRAZNO) {
+				if(this.board[i][j] == Igra.PRAZNO) {
 		
 					zaporednih = 0;
-					trenutni = this.PRAZNO;
+					trenutni = Igra.PRAZNO;
 				}
 				else if(this.board[i][j] == trenutni) {
 					
@@ -221,10 +248,8 @@ public class Igra {
 				
 				
 				if(zaporednih == ZMAGA_ST) {
-					System.out.println("NOTRI");
 					konec_stolpec = new Koordinati(i, j);
 					zmagovalec = trenutni;
-					System.out.println(zacetek + "    " + konec);
 					return zmagovalec;
 				}
 			}
@@ -234,20 +259,20 @@ public class Igra {
 	public char ZmagaVrstica() {
 	
 		
-		char zmagovalec = this.PRAZNO;
+		char zmagovalec = Igra.PRAZNO;
 		
 		for (int j = 0; j < dim; j++) {
 
 		
 			int zaporednih = 0;
-			char trenutni = this.PRAZNO;
+			char trenutni = Igra.PRAZNO;
 			for (int i = 0; i < dim; i++) {
 
 				
-				if(this.board[i][j] == this.PRAZNO) {
+				if(this.board[i][j] == Igra.PRAZNO) {
 		
 					zaporednih = 0;
-					trenutni = this.PRAZNO;
+					trenutni = Igra.PRAZNO;
 				}
 				else if(this.board[i][j] == trenutni) {
 					
@@ -273,8 +298,8 @@ public class Igra {
 	}
 	public char ZmagaDiagonala() {
 		
-		char zmagovalec = this.PRAZNO;
-
+		char zmagovalec = Igra.PRAZNO;
+		// določimo limit, da ne gre out of range
 		int limit = dim - ZMAGA_ST + 1;
 		int start = ZMAGA_ST - 1;
 		
@@ -283,9 +308,11 @@ public class Igra {
 			for(int j = 0; j < dim; j++) {
 				
 			
-				if(this.board[i][j] != this.PRAZNO) {
+				if(this.board[i][j] != Igra.PRAZNO) {
 					zacetek_diagonala = new Koordinati(i, j);
 
+					
+					//diagona od desno zgoraj proti levo dol
 					if(j >= start ) {
 						
 						char trenutni = this.board[i][j];
@@ -304,11 +331,13 @@ public class Igra {
 							zmagovalec = trenutni;
 							
 							konec_diagonala = new Koordinati(i + 4, j - 4);
-							System.out.println(zacetek_diagonala + "zacetek   " + konec_diagonala + " KONEC");
 							return zmagovalec;
 						}
 						
 					}
+					
+					
+					//diagona od levo zgoraj proti desno dol
 					if(j  < limit ) {
 						
 						char trenutni = this.board[i][j];
@@ -326,7 +355,6 @@ public class Igra {
 							
 							zmagovalec = trenutni;
 							konec_diagonala = new Koordinati(i +4 , j + 4);
-							System.out.println(zacetek_diagonala + "zacetek   " + konec_diagonala + " KONEC" + "TUKAAAAJ");
 							return zmagovalec;
 						}
 					}
@@ -336,12 +364,6 @@ public class Igra {
 		}
 
 		return  zmagovalec;
-	}
-	
-	public boolean odigrajPotezo(){
-		
-		
-		return true;
 	}
 	
 

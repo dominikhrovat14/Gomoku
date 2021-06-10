@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.JPanel;
@@ -30,8 +31,9 @@ public class Panel extends JPanel implements MouseListener {
 	  public int x, y;
 	  public static Koordinati clovekPoteza;
 	  public Igra igra;
+	  //na začetku nastavimo na 500. Potem v Framu lahko spremenimo z actionListenerjem
 	  public  int velikost = 500;
-	  public  Set<Koordinati> moznePoteze;
+	  public  List<Koordinati> moznePoteze;
 	  
 	  public boolean clovekClovek = false;
 	  public boolean racunalnikRacunalnik = false;
@@ -100,7 +102,7 @@ public class Panel extends JPanel implements MouseListener {
 		    for (int i = 0; i < cols; i++) {
 		      g.drawLine(i * rowWid, 0, i * rowWid, velikost);
 		    }
-		    
+		    // za igro rač proti rač
 		    if (Frame.racunalnikRacunalnik == true) {
 				igra.racunalnikIgra(igra, Frame.panel);
 					for (int i = 0; i < igra.dim; i++) {
@@ -110,11 +112,10 @@ public class Panel extends JPanel implements MouseListener {
 								
 								Koordinati k = new Koordinati(i, j);
 								
-								if(igra.board[i][j] == igra.igralci[0]) { // clovek
+								if(igra.board[i][j] == igra.igralci[0]) { 
 									g.setColor(Frame.barva);
 								}
 								else {
-									//racunalnik
 								    g.setColor(Color.blue);
 								}
 								
@@ -150,57 +151,24 @@ public class Panel extends JPanel implements MouseListener {
 				}
 			}
 			
-			
+			// narise zmagovalno crto
 			if (igra.ZmagaVrstica() != Igra.PRAZNO) {
-				System.out.println(Igra.zacetek.getX());
-				g.setColor(Color.GREEN);
+				g.setColor(Color.BLACK);
 		    	g.drawLine(pretvoriRacunalnik(Igra.zacetek.getX(),  15, velikost), pretvoriRacunalnik(Igra.zacetek.getY(), 15, velikost), pretvoriRacunalnik(Igra.konec.getX(), 15, velikost), pretvoriRacunalnik(Igra.konec.getY(), 15, velikost));
 		    	
 		    }
 			
 			if (igra.ZmagaStolpec() != Igra.PRAZNO) {
-				g.setColor(Color.GREEN);
+				g.setColor(Color.BLACK);
 		    	g.drawLine(pretvoriRacunalnik(Igra.zacetek_stolpec.getX(),  15, velikost), pretvoriRacunalnik(Igra.zacetek_stolpec.getY(), 15, velikost), pretvoriRacunalnik(Igra.konec_stolpec.getX(), 15, velikost), pretvoriRacunalnik(Igra.konec_stolpec.getY(), 15, velikost));
 		    	
 		    }
 			
 			if (igra.ZmagaDiagonala() != Igra.PRAZNO) {
-				System.out.println(Igra.zacetek_diagonala.getX() + " " + Igra.konec_diagonala.getX());
-				g.setColor(Color.GREEN);
+				g.setColor(Color.BLACK);
 		    	g.drawLine(pretvoriRacunalnik(Igra.zacetek_diagonala.getX(),  15, velikost), pretvoriRacunalnik(Igra.zacetek_diagonala.getY(), 15, velikost), pretvoriRacunalnik(Igra.konec_diagonala.getX(), 15, velikost), pretvoriRacunalnik(Igra.konec_diagonala.getY(), 15, velikost));
 			}
 			
-			
-			
-			
-			
-		    // clovek
-
-		    // racunalnik
-	  //  	g.setColor(Color.blue);
-	//	    g.fillOval(CentralizirajX(pretvoriRacunalnik(k.getX(), 15, velikost),15,velikost), CentralizirajY(pretvoriRacunalnik(k.getY(), 15, velikost),15,velikost), 15, 15);
-
-		    
-		    /*
-		    if (igra.poteza % 2 == 0) {
-			    if (igra.moznePoteze.contains(clovekPoteza)) {
-			    	if (igra.preveriZmago() == Igra.PRAZNO) {
-			    		igra.odigrajPotezo(clovekPoteza);
-					    g.setColor(Frame.barva);
-					    g.fillOval(CentralizirajX(x, 15, velikost), CentralizirajY(y, 15, velikost), 15, 15);
-			    	}
-			    }
-		    }
-		    if (igra.poteza % 2 != 0) {
-		    	Koordinati k = igra.racunalnikPoteza();
-		    	if (igra.preveriZmago() == Igra.PRAZNO) {
-			    	g.setColor(Color.blue);
-				    g.fillOval(CentralizirajX(pretvoriRacunalnik(k.getX(), 15, velikost),15,velikost), CentralizirajY(pretvoriRacunalnik(k.getY(), 15, velikost),15,velikost), 15, 15);
-				    igra.odigrajPotezo(k);
-		    	}
-		    }
-		    */
-		    
 
 		  }
 	
@@ -211,7 +179,8 @@ public class Panel extends JPanel implements MouseListener {
 			if (x < i) {
 				y = (int)Math.round((i + (i - (h / rows) )) / 2); //x premaknemo v sredino
 
-				return y-7;
+				int dy = 7; // mali zamik v sredino
+				return y - dy;
 			}
 		}
 		return 0;
@@ -223,7 +192,8 @@ public class Panel extends JPanel implements MouseListener {
 			if (y < i) {
 				
 				y = (int)Math.round((i + (i - (w / cols) )) / 2); //x premaknemo v sredino
-				return y-7;
+				int dy = 7; // mali zamik v sredino
+				return y - dy;
 			}
 		}
 		return 0;
@@ -258,7 +228,7 @@ public class Panel extends JPanel implements MouseListener {
 		}
 		return 0;
 	}
-	
+	//pretvori racunalnikovo potezo da rise na 0 do dim
 	public int pretvoriRacunalnik(int x, int cols, int w) {
 		for (int i = 0; i < cols + 1; i++) {
 			if (x < i) {
